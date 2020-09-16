@@ -1,0 +1,44 @@
+#######################################
+# Syntax Coloring Map For shButton
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+shButton	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+getButtonState	KEYWORD2
+isButtonClosed	KEYWORD2
+resetButtonState	KEYWORD2
+setDebounce	KEYWORD2
+setTimeout	KEYWORD2
+setDblClickTimeout	KEYWORD2
+setInputType	KEYWORD2
+setButtonType	KEYWORD2
+setVirtualClickOn	KEYWORD2
+setLongClickMode	KEYWORD2
+setLongClickTimeout	KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+
+PULL_UP	LITERAL1
+PULL_DOWN	LITERAL1
+BTN_NO	LITERAL1
+BTN_NC	LITERAL1
+BTN_RELEASED	LITERAL1
+BTN_PRESSED	LITERAL1
+BTN_UP	LITERAL1
+BTN_DOWN	LITERAL1
+BTN_DBLCLICK	LITERAL1
+BTN_ONECLICK	LITERAL1
+BTN_LONGCLICK	LITERAL1
+LCM_CONTINUED	LITERAL1
+LCM_ONLYONCE	LITERAL1
+LCM_CLICKSERIES	LITERAL1
