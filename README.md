@@ -89,4 +89,4 @@ void setLongClickMode(byte longclickmode) - установка режима об
 void setLongClickTimeout(word longclicktimeout) - установка интервала выдачи события BTN_LONGCLICK в режиме LCM_CLICKSERIES (по умолчанию 200 мс)
 
 Библиотека используется во всех моих проектах, где есть кнопки.
-Если возникнут вопросы, пишите на valesh-soft@yandex.ru
+Если возникнут вопросы, пишите на valesh-soft@yandex.ru 
