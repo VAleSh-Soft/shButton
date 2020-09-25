@@ -76,13 +76,13 @@ void setInputType(byte inputtype) - установка типа подключе
 
 void setButtonType(byte btntype) - установка типа кнопки (BTN_NO - нормально разомкнутая, BTN_NC - нормально замкнутая)
 
-void setDebounce(word debounce) - установка времени антидребезга (по умолчанию 50 мс); для отключения антидребезга нужно задать 0 мс
+void setDebounce(word debounce) - установка интервала антидребезга (по умолчанию 50 мс); для отключения антидребезга нужно задать 0 мс
 
-void setTimeout(word new_timeout) - установка таймаута удержания кнопки (по умолчанию 500 мс)
+void setTimeout(word new_timeout) - установка интервала удержания кнопки (по умолчанию 500 мс)
 
 void setDblClickTimeout(word new_timeout) - установка интервала двойного клика (по умолчанию 300 мс)
 
-void setVirtualClickOn(bool virtualclick) - включение (true) или отключение (false) режима "Виртуальный клик"
+void setVirtualClickOn(bool virtualclick) - включение (true) или отключение (false) режима "Виртуальный клик"; по умолчанию режим отключен
 
 void setLongClickMode(byte longclickmode) - установка режима обработки удержания кнопки нажатой (LCM_CONTINUED, LCM_ONLYONCE или LCM_CLICKSERIES)
 
