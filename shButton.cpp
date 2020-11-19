@@ -12,6 +12,8 @@ byte shButton::getButtonState()
 {
   bool flag = getButtonFlag();
   unsigned long thisMls = millis();
+  // сделать сброс событий, чтобы они не выдавались повторно в случае, если состояние кнопки по каким-то причинам заморозилось
+
   // состояние кнопки не изменилось с прошлого опроса
   if (flag == getFlag(FLAG_BIT))
   { // и не поднят флаг подавления дребезга
@@ -97,13 +99,16 @@ bool shButton::isButtonClosed(bool toChecked)
   if (toChecked)
   {
     getButtonState();
-  }
-  return _btnstate != BTN_RELEASED && _btnstate != BTN_UP;
+  } // BTN_ONECLICK фактически тоже означает, что в данный момент кнопка не нажата (см. описание события)
+  return _btnstate != BTN_RELEASED && _btnstate != BTN_UP && _btnstate != BTN_ONECLICK;
 }
 
 void shButton::resetButtonState()
 {
   _clckcount = 0;
+  _longclickcount = 0;
+  // сброс _btnstate в зависимости от последнего состояния - либо нажата, либо отпущена
+  _btnstate = isButtonClosed();
 }
 
 void shButton::setInputType(byte inputtype)
