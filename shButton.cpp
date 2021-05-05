@@ -93,7 +93,7 @@ byte shButton::getButtonState(bool flag)
 
 byte shButton::getButtonState()
 {
-  getButtonState(getButtonFlag());
+  return (getButtonState(getButtonFlag()));
 }
 
 byte shButton::getLastState()
