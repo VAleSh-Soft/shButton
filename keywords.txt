@@ -13,6 +13,7 @@ shButton	KEYWORD1
 #######################################
 
 getButtonState	KEYWORD2
+getLastState	KEYWORD2
 isButtonClosed	KEYWORD2
 resetButtonState	KEYWORD2
 setDebounce	KEYWORD2

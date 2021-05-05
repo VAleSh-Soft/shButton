@@ -8,12 +8,9 @@ shButton::shButton(byte pin, byte inputtype, byte btntype)
   setButtonType(btntype);
 }
 
-byte shButton::getButtonState()
+byte shButton::getButtonState(bool flag)
 {
-  bool flag = getButtonFlag();
   unsigned long thisMls = millis();
-  // сделать сброс событий, чтобы они не выдавались повторно в случае, если состояние кнопки по каким-то причинам заморозилось
-
   // состояние кнопки не изменилось с прошлого опроса
   if (flag == getFlag(FLAG_BIT))
   { // и не поднят флаг подавления дребезга
@@ -94,12 +91,23 @@ byte shButton::getButtonState()
   return _btnstate;
 }
 
+byte shButton::getButtonState()
+{
+  return (getButtonState(getButtonFlag()));
+}
+
+byte shButton::getLastState()
+{
+  return _btnstate;
+}
+
 bool shButton::isButtonClosed(bool toChecked)
 {
   if (toChecked)
   {
     getButtonState();
-  } // BTN_ONECLICK фактически тоже означает, что в данный момент кнопка не нажата (см. описание события)
+  } 
+  // BTN_ONECLICK фактически тоже означает, что в данный момент кнопка не нажата (см. описание события)
   return _btnstate != BTN_RELEASED && _btnstate != BTN_UP && _btnstate != BTN_ONECLICK;
 }
 
@@ -114,14 +122,17 @@ void shButton::resetButtonState()
 void shButton::setInputType(byte inputtype)
 {
   setFlag(INPUTTYPE_BIT, inputtype);
-  switch (inputtype)
+  // if (_PIN != NO_PIN)
   {
-  case PULL_UP:
-    pinMode(_PIN, INPUT_PULLUP);
-    break;
-  default:
-    pinMode(_PIN, INPUT);
-    break;
+    switch (inputtype)
+    {
+    case PULL_UP:
+      pinMode(_PIN, INPUT_PULLUP);
+      break;
+    default:
+      pinMode(_PIN, INPUT);
+      break;
+    }
   }
 }
 
