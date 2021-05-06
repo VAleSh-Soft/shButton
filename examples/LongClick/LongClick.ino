@@ -42,7 +42,7 @@ void loop()
     count = 0;
     break;
   case BTN_LONGCLICK:
-    // действие по серийному событию
+    // действие по серийному событию 
     Serial.print(++count);
     Serial.println(" - LongClickEventSeries");
     break;

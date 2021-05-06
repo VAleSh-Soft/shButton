@@ -29,7 +29,7 @@ void loop()
   switch (but.getButtonState())
   {
   case BTN_ONECLICK:
-    // действие по одинарному клику
+    // действие по одинарному клику 
     Serial.println("onClick");
     break;
   case BTN_DBLCLICK:

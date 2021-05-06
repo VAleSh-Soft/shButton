@@ -13,15 +13,15 @@ shButton::shButton()
 
 }
 
-byte shButton::getButtonState(bool flag)
+byte shButton::getButtonState(bool isClosed)
 {
   unsigned long thisMls = millis();
   // состояние кнопки не изменилось с прошлого опроса
-  if (flag == getFlag(FLAG_BIT))
+  if (isClosed == getFlag(FLAG_BIT))
   { // и не поднят флаг подавления дребезга
     if (!getFlag(DEBOUNCE_BIT))
     {
-      if (!flag)
+      if (!isClosed)
       { // кнопка находится в отжатом состоянии
         _btnstate = BTN_RELEASED;
         if (millis() - dbl_timer > _dblclck)
@@ -85,12 +85,12 @@ byte shButton::getButtonState(bool flag)
       } // иначе, если поднят, и интервал вышел - установить состояние кнопки
       else if (millis() - deb_timer >= _debounce)
       {
-        setBtnUpDown(flag, thisMls);
+        setBtnUpDown(isClosed, thisMls);
       }
     }
     else // если подавление вообще не задано, то сразу установить состояние кнопки
     {
-      setBtnUpDown(flag, thisMls);
+      setBtnUpDown(isClosed, thisMls);
     }
   }
   return _btnstate;
