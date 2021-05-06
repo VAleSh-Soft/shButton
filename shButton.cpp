@@ -8,6 +8,11 @@ shButton::shButton(byte pin, byte inputtype, byte btntype)
   setButtonType(btntype);
 }
 
+shButton::shButton()
+{
+
+}
+
 byte shButton::getButtonState(bool flag)
 {
   unsigned long thisMls = millis();
@@ -106,7 +111,7 @@ bool shButton::isButtonClosed(bool toChecked)
   if (toChecked)
   {
     getButtonState();
-  } 
+  }
   // BTN_ONECLICK фактически тоже означает, что в данный момент кнопка не нажата (см. описание события)
   return _btnstate != BTN_RELEASED && _btnstate != BTN_UP && _btnstate != BTN_ONECLICK;
 }
@@ -122,17 +127,14 @@ void shButton::resetButtonState()
 void shButton::setInputType(byte inputtype)
 {
   setFlag(INPUTTYPE_BIT, inputtype);
-  // if (_PIN != NO_PIN)
+  switch (inputtype)
   {
-    switch (inputtype)
-    {
-    case PULL_UP:
-      pinMode(_PIN, INPUT_PULLUP);
-      break;
-    default:
-      pinMode(_PIN, INPUT);
-      break;
-    }
+  case PULL_UP:
+    pinMode(_PIN, INPUT_PULLUP);
+    break;
+  default:
+    pinMode(_PIN, INPUT);
+    break;
   }
 }
 
