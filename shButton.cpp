@@ -108,7 +108,7 @@ byte shButton::getLastState()
 
 bool shButton::isButtonClosed(bool toChecked)
 {
-  if (toChecked) && (!getFlag(VIRTUALBUTTON_BIT))
+  if ((toChecked) && (!getFlag(VIRTUALBUTTON_BIT)))
   {
     getButtonState();
   }
