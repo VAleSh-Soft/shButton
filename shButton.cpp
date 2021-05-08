@@ -10,7 +10,7 @@ shButton::shButton(byte pin, byte inputtype, byte btntype)
 
 shButton::shButton()
 {
-
+  setFlag(VIRTUALBUTTON_BIT, true);
 }
 
 byte shButton::getButtonState(bool isClosed)
@@ -108,7 +108,7 @@ byte shButton::getLastState()
 
 bool shButton::isButtonClosed(bool toChecked)
 {
-  if (toChecked)
+  if (toChecked) && (!getFlag(VIRTUALBUTTON_BIT))
   {
     getButtonState();
   }

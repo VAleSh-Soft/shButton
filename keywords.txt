@@ -9,7 +9,7 @@
 shButton	KEYWORD1
 
 #######################################
-# Methods and Functions (KEYWORD2)
+# Methods and Functions (KEYWORD2) 
 #######################################
 
 getButtonState	KEYWORD2
