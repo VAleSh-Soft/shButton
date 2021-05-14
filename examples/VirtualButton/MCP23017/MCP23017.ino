@@ -1,3 +1,4 @@
+#include <Wire.h>
 #include <Adafruit_MCP23017.h> // https://github.com/adafruit/Adafruit-MCP23017-Arduino-Library
 #include <shButton.h>
 
