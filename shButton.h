@@ -65,7 +65,6 @@ private:
 * 5 бит - флаг виртуальной кнопки, 0 - обычная кнопка, 1 - виртуальная кнопка
   */
 
-  unsigned long btn_timer = 0;   // таймер удержания кнопки нажатой
   unsigned long deb_timer = 0;   // таймер подавления дребезга контактов
   unsigned long dbl_timer = 0;   // таймер двойного клика
   unsigned long lclck_timer = 0; // таймер серийного BTN_LONGCLICK

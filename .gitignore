@@ -1,8 +1,8 @@
 *.zip
 Thumbs.db
 .vscode/*
-btnChecked.vsd
-shButton.xlsx
+*.vsd
+*.~vsd
 shButton.dia
 shButton.dia~
 .gitignore

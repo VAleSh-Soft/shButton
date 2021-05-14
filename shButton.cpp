@@ -34,7 +34,7 @@ byte shButton::getButtonState(bool isClosed)
           _longclickcount = 0;
         }
       }
-      else if (millis() - btn_timer < _timeout)
+      else if (millis() - deb_timer < _timeout)
       { // кнопка находится в нажатом состоянии, но время удержания еще не вышло
         _btnstate = BTN_PRESSED;
       }
@@ -202,8 +202,7 @@ void shButton::setBtnUpDown(bool flag, unsigned long thisMls)
   setFlag(FLAG_BIT, flag);
 
   if (flag)
-  { // если кнопка только что нажата, то запустить таймер удержания
-    btn_timer = thisMls;
+  {
     if (_clckcount == 0)
     { // если это первый клик, запустить таймер двойного клика и увеличить счетчик кликов
       _btnstate = BTN_DOWN;
@@ -224,8 +223,7 @@ void shButton::setBtnUpDown(bool flag, unsigned long thisMls)
 
 bool shButton::getFlag(byte _bit)
 {
-  bool result;
-  (_bit < 8) ? result = (((_flags) >> (_bit)) & 0x01) : result = false;
+  bool result = (_bit < 8) ? (((_flags) >> (_bit)) & 0x01) : false;
   return (result);
 }
 
