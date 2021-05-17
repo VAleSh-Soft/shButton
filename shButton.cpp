@@ -25,51 +25,54 @@ byte shButton::getButtonState(bool isClosed)
       { // кнопка находится в отжатом состоянии
         _btnstate = BTN_RELEASED;
         if (millis() - dbl_timer > _dblclck)
-        { // если период двойного клика закончился, проверить на виртуальный клик и обнулить счетчик кликов
-          if (getFlag(VIRTUALCLICK_BIT) && _clckcount == 1)
+        { // если период двойного клика закончился, проверить на виртуальный клик и сбросить флаг одиночного клика
+          if (getFlag(VIRTUALCLICK_BIT) && getFlag(ONECLICK_BIT))
           {
             _btnstate = BTN_ONECLICK;
           }
-          _clckcount = 0;
-          _longclickcount = 0;
+          setFlag(ONECLICK_BIT, false);
+          setFlag(LONGCLICK_BIT, false);
         }
       }
-      else if (millis() - deb_timer < _timeout)
+      else if (millis() - btn_timer < _timeout)
       { // кнопка находится в нажатом состоянии, но время удержания еще не вышло
         _btnstate = BTN_PRESSED;
       }
-      else
-      { // если кнопка удерживается нажатой дольше времени удержания, то дальше возможны варианты
-        switch (_longclickmode)
+      else // если кнопка удерживается нажатой дольше времени удержания, то дальше возможны варианты
+      { // если события удержания еще не было, то выдать его
+        if (!getFlag(LONGCLICK_BIT))
         {
-        case LCM_ONLYONCE:
-          if (_longclickcount == 0)
+          if (_longclickmode == LCM_CLICKSERIES)
           {
-            _longclickcount++;
-            _btnstate = BTN_LONGCLICK;
+            btn_timer = thisMls;
           }
-          else
-          {
-            _btnstate = BTN_PRESSED;
-          }
-          break;
-        case LCM_CLICKSERIES:
-          if (millis() - lclck_timer >= _longclicktimeout)
-          {
-            lclck_timer = thisMls;
-            _longclickcount++;
-            _btnstate = BTN_LONGCLICK;
-          }
-          else
-          {
-            _btnstate = BTN_PRESSED;
-          }
-          break;
-        default:
+          setFlag(LONGCLICK_BIT, true);
           _btnstate = BTN_LONGCLICK;
-          break;
         }
-        _clckcount = 0;
+        else // елси это уже не первое событие удержания, то дальше согласно выбранного режима
+        {
+          switch (_longclickmode)
+          {
+          case LCM_ONLYONCE:
+            _btnstate = BTN_PRESSED;
+            break;
+          case LCM_CLICKSERIES:
+            if (millis() - btn_timer >= _longclicktimeout)
+            {
+              btn_timer = thisMls;
+              _btnstate = BTN_LONGCLICK;
+            }
+            else
+            {
+              _btnstate = BTN_PRESSED;
+            }
+            break;
+          default:
+            _btnstate = BTN_LONGCLICK;
+            break;
+          }
+        }
+        setFlag(ONECLICK_BIT, false);
       }
     }
   }
@@ -80,10 +83,10 @@ byte shButton::getButtonState(bool isClosed)
     { // если флаг подавления еще не поднят - поднять и больше ничего не делать
       if (!getFlag(DEBOUNCE_BIT))
       {
-        deb_timer = thisMls;
+        btn_timer = thisMls;
         setFlag(DEBOUNCE_BIT, true);
       } // иначе, если поднят, и интервал вышел - установить состояние кнопки
-      else if (millis() - deb_timer >= _debounce)
+      else if (millis() - btn_timer >= _debounce)
       {
         setBtnUpDown(isClosed, thisMls);
       }
@@ -118,8 +121,8 @@ bool shButton::isButtonClosed(bool toChecked)
 
 void shButton::resetButtonState()
 {
-  _clckcount = 0;
-  _longclickcount = 0;
+  setFlag(ONECLICK_BIT, false);
+  setFlag(LONGCLICK_BIT, false);
   // сброс _btnstate в зависимости от последнего состояния - либо нажата, либо отпущена
   _btnstate = isButtonClosed();
 }
@@ -203,16 +206,16 @@ void shButton::setBtnUpDown(bool flag, unsigned long thisMls)
 
   if (flag)
   {
-    if (_clckcount == 0)
-    { // если это первый клик, запустить таймер двойного клика и увеличить счетчик кликов
+    if (!getFlag(ONECLICK_BIT))
+    { // если это первый клик, запустить таймер двойного клика и поднять флаг одиночного клика
       _btnstate = BTN_DOWN;
-      _clckcount++;
+      setFlag(ONECLICK_BIT, true);
       dbl_timer = thisMls;
     }
     else if (millis() - dbl_timer <= _dblclck)
     {
       _btnstate = BTN_DBLCLICK;
-      _clckcount = 0;
+      setFlag(ONECLICK_BIT, false);
     }
   }
   else
