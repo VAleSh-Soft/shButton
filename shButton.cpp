@@ -39,7 +39,7 @@ byte shButton::getButtonState(bool isClosed)
         _btnstate = BTN_PRESSED;
       }
       else // если кнопка удерживается нажатой дольше времени удержания, то дальше возможны варианты
-      { // если события удержания еще не было, то выдать его
+      {    // если события удержания еще не было, то выдать его
         if (!getFlag(LONGCLICK_BIT))
         {
           if (_longclickmode == LCM_CLICKSERIES)
@@ -49,7 +49,7 @@ byte shButton::getButtonState(bool isClosed)
           setFlag(LONGCLICK_BIT, true);
           _btnstate = BTN_LONGCLICK;
         }
-        else // елси это уже не первое событие удержания, то дальше согласно выбранного режима
+        else // если это уже не первое событие удержания, то дальше согласно выбранного режима
         {
           switch (_longclickmode)
           {
@@ -83,7 +83,7 @@ byte shButton::getButtonState(bool isClosed)
     { // если флаг подавления еще не поднят - поднять и больше ничего не делать
       if (!getFlag(DEBOUNCE_BIT))
       {
-        btn_timer = thisMls;
+        btn_timer = thisMls; 
         setFlag(DEBOUNCE_BIT, true);
       } // иначе, если поднят, и интервал вышел - установить состояние кнопки
       else if (millis() - btn_timer >= _debounce)
@@ -93,6 +93,7 @@ byte shButton::getButtonState(bool isClosed)
     }
     else // если подавление вообще не задано, то сразу установить состояние кнопки
     {
+      btn_timer = thisMls;
       setBtnUpDown(isClosed, thisMls);
     }
   }

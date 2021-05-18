@@ -77,7 +77,7 @@ private:
   // получение состояния бита
   bool getFlag(byte _bit);
   // установка состояния бита
-  void setFlag(byte _bit, bool x);
+  void setFlag(byte _bit, bool x); 
 
 public:
   // Варианты инициализации:
