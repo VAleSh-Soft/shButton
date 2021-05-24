@@ -188,14 +188,18 @@ void shButton::setLongClickTimeout(word longclicktimeout)
 
 bool shButton::getButtonFlag()
 {
-  bool val = digitalRead(_PIN);
-  if (getFlag(INPUTTYPE_BIT) == PULL_UP)
+  bool val = false;
+  if (!getFlag(VIRTUALBUTTON_BIT))
   {
-    val = !val;
-  }
-  if (getFlag(BTNTYPE_BIT) == BTN_NC)
-  {
-    val = !val;
+    val = digitalRead(_PIN);
+    if (getFlag(INPUTTYPE_BIT) == PULL_UP)
+    {
+      val = !val;
+    }
+    if (getFlag(BTNTYPE_BIT) == BTN_NC)
+    {
+      val = !val;
+    }
   }
   return val;
 }
