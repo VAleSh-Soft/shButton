@@ -34,7 +34,7 @@ byte shButton::getButtonState(bool isClosed)
           setFlag(LONGCLICK_BIT, false);
         }
       }
-      else if (millis() - btn_timer < _timeout)
+      else if (millis() - btn_timer < _timeout && !getFlag(LONGCLICK_BIT))
       { // кнопка находится в нажатом состоянии, но время удержания еще не вышло
         _btnstate = BTN_PRESSED;
       }
