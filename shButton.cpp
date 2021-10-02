@@ -24,7 +24,7 @@ byte shButton::getButtonState(bool isClosed)
       if (!isClosed)
       { // кнопка находится в отжатом состоянии
         _btnstate = BTN_RELEASED;
-        if (millis() - dbl_timer > _dblclck)
+        if (thisMls - dbl_timer > _dblclck)
         { // если период двойного клика закончился, проверить на виртуальный клик и сбросить флаг одиночного клика
           if (getFlag(VIRTUALCLICK_BIT) && getFlag(ONECLICK_BIT))
           {
@@ -34,8 +34,8 @@ byte shButton::getButtonState(bool isClosed)
           setFlag(LONGCLICK_BIT, false);
         }
       }
-      else if (millis() - btn_timer < _timeout && !getFlag(LONGCLICK_BIT))
-      { // кнопка находится в нажатом состоянии, но время удержания еще не вышло
+      else if (thisMls - btn_timer < _timeout && !getFlag(LONGCLICK_BIT))
+      { // кнопка находится в нажатом состоянии, но время удержания еще не вышло, и события удержания еще не было
         _btnstate = BTN_PRESSED;
       }
       else // если кнопка удерживается нажатой дольше времени удержания, то дальше возможны варианты
@@ -57,7 +57,7 @@ byte shButton::getButtonState(bool isClosed)
             _btnstate = BTN_PRESSED;
             break;
           case LCM_CLICKSERIES:
-            if (millis() - btn_timer >= _longclicktimeout)
+            if (thisMls - btn_timer >= _longclicktimeout)
             {
               btn_timer = thisMls;
               _btnstate = BTN_LONGCLICK;
@@ -83,11 +83,12 @@ byte shButton::getButtonState(bool isClosed)
     { // если флаг подавления еще не поднят - поднять и больше ничего не делать
       if (!getFlag(DEBOUNCE_BIT))
       {
-        btn_timer = thisMls; 
+        btn_timer = thisMls;
         setFlag(DEBOUNCE_BIT, true);
       } // иначе, если поднят, и интервал вышел - установить состояние кнопки
-      else if (millis() - btn_timer >= _debounce)
+      else if (thisMls - btn_timer >= _debounce)
       {
+        btn_timer = thisMls;
         setBtnUpDown(isClosed, thisMls);
       }
     }
@@ -217,7 +218,7 @@ void shButton::setBtnUpDown(bool flag, unsigned long thisMls)
       setFlag(ONECLICK_BIT, true);
       dbl_timer = thisMls;
     }
-    else if (millis() - dbl_timer <= _dblclck)
+    else if (thisMls - dbl_timer <= _dblclck)
     {
       _btnstate = BTN_DBLCLICK;
       setFlag(ONECLICK_BIT, false);
