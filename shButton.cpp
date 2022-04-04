@@ -165,29 +165,14 @@ void shButton::setTimeoutOfDebounce(uint16_t new_timeout)
   _debounce_timeout = new_timeout;
 }
 
-void shButton::setDebounce(uint16_t debounce)
-{
-  setTimeoutOfDebounce(debounce);
-}
-
 void shButton::setTimeoutOfLongClick(uint16_t new_timeout)
 {
   _longclick_timeout = new_timeout;
 }
 
-void shButton::setTimeout(uint16_t new_timeout)
-{
-  setTimeoutOfLongClick(new_timeout);
-}
-
 void shButton::setTimeoutOfDblClick(uint16_t new_timeout)
 {
   _dblclck_timeout = new_timeout;
-}
-
-void shButton::setDblClickTimeout(uint16_t new_timeout)
-{
-  setTimeoutOfDblClick(new_timeout);
 }
 
 void shButton::setVirtualClickOn(bool virtualclick_on)
@@ -202,11 +187,6 @@ void shButton::setLongClickMode(byte longclickmode)
   {
     _interval_of_serial = INTERVAL_OF_SERIAL;
   }
-}
-
-void shButton::setLongClickTimeout(uint16_t new_timeout)
-{
-  setIntervalOfSerial(new_timeout);
 }
 
 void shButton::setIntervalOfSerial(uint16_t new_interval)
@@ -274,4 +254,26 @@ void shButton::setFlag(byte _bit, bool x)
   {
     (x) ? (_flags) |= (1UL << (_bit)) : (_flags) &= ~(1UL << (_bit));
   }
+}
+
+// ==== deprecated ===================================
+
+void shButton::setLongClickTimeout(uint16_t new_timeout)
+{
+  setIntervalOfSerial(new_timeout);
+}
+
+void shButton::setDblClickTimeout(uint16_t new_timeout)
+{
+  setTimeoutOfDblClick(new_timeout);
+}
+
+void shButton::setTimeout(uint16_t new_timeout)
+{
+  setTimeoutOfLongClick(new_timeout);
+}
+
+void shButton::setDebounce(uint16_t debounce)
+{
+  setTimeoutOfDebounce(debounce);
 }

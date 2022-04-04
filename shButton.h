@@ -116,20 +116,11 @@ public:
   // установка времени антидребезга (по умолчанию 50 мс); для отключения антидребезга нужно задать 0 мс
   void setTimeoutOfDebounce(uint16_t new_timeout);
 
-  // метод устарел, используйте метод setTimeoutOfDebounce(uint16_t)
-  [[deprecated("Используйте метод setTimeoutOfDebounce(uint16_t); Use the setTimeoutOfDebounce(uint16_t) function")]] void setDebounce(uint16_t debounce);
-
   // установка таймаута удержания кнопки (по умолчанию 500 мс)
   void setTimeoutOfLongClick(uint16_t new_timeout);
 
-  // метод устарел, используйте метод setTimeoutOfLongClick(uint16_t)
-  [[deprecated("Используйте метод setTimeoutOfLongClick(uint16_t); Use the setTimeoutOfLongClick(uint16_t) function")]] void setTimeout(uint16_t new_timeout);
-
   // установка интервала двойного клика (по умолчанию 300 мс)
   void setTimeoutOfDblClick(uint16_t new_timeout);
-
-  // метод устарел, используйте метод setTimeoutOfDblClick(uint16_t)
-  [[deprecated("Используйте метод setTimeoutOfDblClick(uint16_t); Use the setTimeoutOfDblClick(uint16_t) function")]] void setDblClickTimeout(uint16_t new_timeout);
 
   // включение режима "Виртуальный клик"
   void setVirtualClickOn(bool virtualclick_on);
@@ -140,6 +131,17 @@ public:
   // установка интервала выдачи события BTN_LONGCLICK в режиме LCM_CLICKSERIES
   void setIntervalOfSerial(uint16_t new_interval);
 
+  // ==== deprecated ============================
+
   // метод устарел, используйте метод setIntervalOfSerial(uint16_t)
   [[deprecated("Используйте метод setIntervalOfSerial(uint16_t); Use setIntervalOfSerial(uint16_t) function")]] void setLongClickTimeout(uint16_t new_timeout);
+
+  // метод устарел, используйте метод setTimeoutOfDblClick(uint16_t)
+  [[deprecated("Используйте метод setTimeoutOfDblClick(uint16_t); Use the setTimeoutOfDblClick(uint16_t) function")]] void setDblClickTimeout(uint16_t new_timeout);
+
+  // метод устарел, используйте метод setTimeoutOfLongClick(uint16_t)
+  [[deprecated("Используйте метод setTimeoutOfLongClick(uint16_t); Use the setTimeoutOfLongClick(uint16_t) function")]] void setTimeout(uint16_t new_timeout);
+
+  // метод устарел, используйте метод setTimeoutOfDebounce(uint16_t)
+  [[deprecated("Используйте метод setTimeoutOfDebounce(uint16_t); Use the setTimeoutOfDebounce(uint16_t) function")]] void setDebounce(uint16_t debounce);
 };
