@@ -13,45 +13,45 @@ const byte colsPin[] = {7, 6, 5};      // пины столбцов
   при работе с ней положение контактов кнопки определяется не 
   библиотекой, а внешним кодом
 */
-shButton btn_1;
-shButton btn_2;
-shButton btn_3;
-shButton btn_4;
-shButton btn_5;
-shButton btn_6;
-shButton btn_7;
-shButton btn_8;
-shButton btn_9;
-shButton btn_s;
-shButton btn_0;
-shButton btn_g;
+shButton but_1;
+shButton but_2;
+shButton but_3;
+shButton but_4;
+shButton but_5;
+shButton but_6;
+shButton but_7;
+shButton but_8;
+shButton but_9;
+shButton but_s;
+shButton but_0;
+shButton but_g;
 
 // объединяем кнопки в массив для удобства работы
 shButton btnList[rows][cols] =
-{
-  {btn_1, btn_2, btn_3},
-  {btn_4, btn_5, btn_6},
-  {btn_7, btn_8, btn_9},
-  {btn_s, btn_0, btn_g}
-};
+    {
+        {but_1, but_2, but_3},
+        {but_4, but_5, but_6},
+        {but_7, but_8, but_9},
+        {but_s, but_0, but_g}};
 
 // создаем массив символов, привязанных к кнопкам клавиатуры
 char charList[rows][cols] =
-{
-  {'1', '2', '3'},
-  {'4', '5', '6'},
-  {'7', '8', '9'},
-  {'*', '0', '#'}
-};
+    {
+        {'1', '2', '3'},
+        {'4', '5', '6'},
+        {'7', '8', '9'},
+        {'*', '0', '#'}};
 
 void setup()
 {
   Serial.begin(9600);
-  for (int i = 0; i < rows; i++) {  // выставляем пины строк на выход
+  for (int i = 0; i < rows; i++)
+  { // выставляем пины строк на выход
     pinMode(rowsPin[i], OUTPUT);
     digitalWrite(rowsPin[i], HIGH);
   }
-  for (int i = 0; i < cols; i++) {  // выставляем пины столбцов на вход
+  for (int i = 0; i < cols; i++)
+  { // выставляем пины столбцов на вход
     pinMode(colsPin[i], INPUT_PULLUP);
   }
 }
@@ -61,15 +61,16 @@ void loop()
   // опрос кнопок, для уверенной обработки состояния кнопок опросы нужно делать как можно чаще
   for (byte r = 0; r < rows; r++)
   {
-    digitalWrite(rowsPin[r], LOW);     // последовательно выставляем по одной строке в LOW
+    digitalWrite(rowsPin[r], LOW);  // последовательно выставляем по одной строке в LOW
     for (byte c = 0; c < cols; c++) // и считываем столбцы, определяя состояние кнопок
     {
       switch (btnList[r][c].getButtonState(!digitalRead(colsPin[c])))
-      { case BTN_DOWN:
-          Serial.println(charList[r][c]);
-          break;
+      {
+      case BTN_DOWN:
+        Serial.println(charList[r][c]);
+        break;
       }
     }
-    digitalWrite(rowsPin[r], HIGH);       // возвращем строку в HIGH и крутим дальше
+    digitalWrite(rowsPin[r], HIGH); // возвращем строку в HIGH и крутим дальше
   }
 }

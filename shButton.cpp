@@ -15,7 +15,7 @@ shButton::shButton()
 
 byte shButton::getButtonState(bool isClosed)
 {
-  unsigned long thisMls = millis();
+  uint32_t thisMls = millis();
   // состояние кнопки не изменилось с прошлого опроса
   if (isClosed == getFlag(FLAG_BIT))
   { // и не поднят флаг подавления дребезга
@@ -23,52 +23,52 @@ byte shButton::getButtonState(bool isClosed)
     {
       if (!isClosed)
       { // кнопка находится в отжатом состоянии
-        _btnstate = BTN_RELEASED;
-        if (thisMls - dbl_timer > _dblclck)
+        _btn_state = BTN_RELEASED;
+        if (thisMls - dbl_timer > _dblclck_timeout)
         { // если период двойного клика закончился, проверить на виртуальный клик и сбросить флаг одиночного клика
           if (getFlag(VIRTUALCLICK_BIT) && getFlag(ONECLICK_BIT))
           {
-            _btnstate = BTN_ONECLICK;
+            _btn_state = BTN_ONECLICK;
           }
           setFlag(ONECLICK_BIT, false);
           setFlag(LONGCLICK_BIT, false);
         }
       }
-      else if (thisMls - btn_timer < _timeout && !getFlag(LONGCLICK_BIT))
+      else if (thisMls - btn_timer < _longclick_timeout && !getFlag(LONGCLICK_BIT))
       { // кнопка находится в нажатом состоянии, но время удержания еще не вышло, и события удержания еще не было
-        _btnstate = BTN_PRESSED;
+        _btn_state = BTN_PRESSED;
       }
       else // если кнопка удерживается нажатой дольше времени удержания, то дальше возможны варианты
       {    // если события удержания еще не было, то выдать его
         if (!getFlag(LONGCLICK_BIT))
         {
-          if (_longclickmode == LCM_CLICKSERIES)
+          if (_longclick_mode == LCM_CLICKSERIES)
           {
             btn_timer = thisMls;
           }
           setFlag(LONGCLICK_BIT, true);
-          _btnstate = BTN_LONGCLICK;
+          _btn_state = BTN_LONGCLICK;
         }
         else // если это уже не первое событие удержания, то дальше согласно выбранного режима
         {
-          switch (_longclickmode)
+          switch (_longclick_mode)
           {
           case LCM_ONLYONCE:
-            _btnstate = BTN_PRESSED;
+            _btn_state = BTN_PRESSED;
             break;
           case LCM_CLICKSERIES:
-            if (thisMls - btn_timer >= _longclicktimeout)
+            if (thisMls - btn_timer >= _interval_of_serial)
             {
               btn_timer = thisMls;
-              _btnstate = BTN_LONGCLICK;
+              _btn_state = BTN_LONGCLICK;
             }
             else
             {
-              _btnstate = BTN_PRESSED;
+              _btn_state = BTN_PRESSED;
             }
             break;
           default:
-            _btnstate = BTN_LONGCLICK;
+            _btn_state = BTN_LONGCLICK;
             break;
           }
         }
@@ -79,14 +79,14 @@ byte shButton::getButtonState(bool isClosed)
   // состояние кнопки изменилось с прошлого опроса
   else
   { // если задано подавление дребезга контактов
-    if (_debounce > 0)
+    if (_debounce_timeout > 0)
     { // если флаг подавления еще не поднят - поднять и больше ничего не делать
       if (!getFlag(DEBOUNCE_BIT))
       {
         btn_timer = thisMls;
         setFlag(DEBOUNCE_BIT, true);
       } // иначе, если поднят, и интервал вышел - установить состояние кнопки
-      else if (thisMls - btn_timer >= _debounce)
+      else if (thisMls - btn_timer >= _debounce_timeout)
       {
         btn_timer = thisMls;
         setBtnUpDown(isClosed, thisMls);
@@ -98,7 +98,7 @@ byte shButton::getButtonState(bool isClosed)
       setBtnUpDown(isClosed, thisMls);
     }
   }
-  return _btnstate;
+  return (_btn_state);
 }
 
 byte shButton::getButtonState()
@@ -108,7 +108,7 @@ byte shButton::getButtonState()
 
 byte shButton::getLastState()
 {
-  return _btnstate;
+  return (_btn_state);
 }
 
 bool shButton::isButtonClosed(bool toChecked)
@@ -118,15 +118,27 @@ bool shButton::isButtonClosed(bool toChecked)
     getButtonState();
   }
   // BTN_ONECLICK фактически тоже означает, что в данный момент кнопка не нажата (см. описание события)
-  return _btnstate != BTN_RELEASED && _btnstate != BTN_UP && _btnstate != BTN_ONECLICK;
+  return (_btn_state != BTN_RELEASED && _btn_state != BTN_UP && _btn_state != BTN_ONECLICK);
+}
+
+bool shButton::isSecondButtonPressed(shButton &_but)
+{
+  bool result = false;
+  if (getLastState() == BTN_DOWN && _but.isButtonClosed())
+  {
+    result = true;
+    resetButtonState();
+    _but.resetButtonState();
+  }
+  return (result);
 }
 
 void shButton::resetButtonState()
 {
   setFlag(ONECLICK_BIT, false);
   setFlag(LONGCLICK_BIT, false);
-  // сброс _btnstate в зависимости от последнего состояния - либо нажата, либо отпущена
-  _btnstate = isButtonClosed();
+  // сброс _btn_state в зависимости от последнего состояния - либо нажата, либо отпущена
+  _btn_state = isButtonClosed();
 }
 
 void shButton::setInputType(byte inputtype)
@@ -148,42 +160,62 @@ void shButton::setButtonType(byte btntype)
   setFlag(BTNTYPE_BIT, btntype);
 }
 
-void shButton::setDebounce(word debounce)
+void shButton::setTimeoutOfDebounce(uint16_t new_timeout)
 {
-  _debounce = debounce;
+  _debounce_timeout = new_timeout;
 }
 
-void shButton::setTimeout(word new_timeout)
+void shButton::setDebounce(uint16_t debounce)
 {
-  _timeout = new_timeout;
+  setTimeoutOfDebounce(debounce);
 }
 
-void shButton::setDblClickTimeout(word new_timeout)
+void shButton::setTimeoutOfLongClick(uint16_t new_timeout)
 {
-  _dblclck = new_timeout;
+  _longclick_timeout = new_timeout;
 }
 
-void shButton::setVirtualClickOn(bool virtualclick)
+void shButton::setTimeout(uint16_t new_timeout)
 {
-  setFlag(VIRTUALCLICK_BIT, virtualclick);
+  setTimeoutOfLongClick(new_timeout);
+}
+
+void shButton::setTimeoutOfDblClick(uint16_t new_timeout)
+{
+  _dblclck_timeout = new_timeout;
+}
+
+void shButton::setDblClickTimeout(uint16_t new_timeout)
+{
+  setTimeoutOfDblClick(new_timeout);
+}
+
+void shButton::setVirtualClickOn(bool virtualclick_on)
+{
+  setFlag(VIRTUALCLICK_BIT, virtualclick_on);
 }
 
 void shButton::setLongClickMode(byte longclickmode)
 {
-  _longclickmode = longclickmode;
-  if (_longclickmode == LCM_CLICKSERIES && _longclicktimeout == 0)
+  _longclick_mode = longclickmode;
+  if (_longclick_mode == LCM_CLICKSERIES && _interval_of_serial == 0)
   {
-    _longclicktimeout = LONGCLICKTIMEOUT;
+    _interval_of_serial = INTERVAL_OF_SERIAL;
   }
 }
 
-void shButton::setLongClickTimeout(word longclicktimeout)
+void shButton::setLongClickTimeout(uint16_t new_timeout)
 {
-  _longclicktimeout = longclicktimeout;
+  setIntervalOfSerial(new_timeout);
+}
+
+void shButton::setIntervalOfSerial(uint16_t new_interval)
+{
+  _interval_of_serial = new_interval;
   // если установлено нулевое значение, то перевести режим на однократное событие
-  if (_longclicktimeout == 0)
+  if (_interval_of_serial == 0)
   {
-    _longclickmode = LCM_ONLYONCE;
+    _longclick_mode = LCM_ONLYONCE;
   }
 }
 
@@ -202,10 +234,10 @@ bool shButton::getButtonFlag()
       val = !val;
     }
   }
-  return val;
+  return (val);
 }
 
-void shButton::setBtnUpDown(bool flag, unsigned long thisMls)
+void shButton::setBtnUpDown(bool flag, uint32_t thisMls)
 {
   setFlag(DEBOUNCE_BIT, false);
   setFlag(FLAG_BIT, flag);
@@ -214,19 +246,19 @@ void shButton::setBtnUpDown(bool flag, unsigned long thisMls)
   {
     if (!getFlag(ONECLICK_BIT))
     { // если это первый клик, запустить таймер двойного клика и поднять флаг одиночного клика
-      _btnstate = BTN_DOWN;
+      _btn_state = BTN_DOWN;
       setFlag(ONECLICK_BIT, true);
       dbl_timer = thisMls;
     }
-    else if (thisMls - dbl_timer <= _dblclck)
+    else if (thisMls - dbl_timer <= _dblclck_timeout)
     {
-      _btnstate = BTN_DBLCLICK;
+      _btn_state = BTN_DBLCLICK;
       setFlag(ONECLICK_BIT, false);
     }
   }
   else
   {
-    _btnstate = BTN_UP;
+    _btn_state = BTN_UP;
   }
 }
 

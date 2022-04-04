@@ -2,6 +2,9 @@
 
 // Пример обработки одновременного нажатия на две кнопки
 
+#define BTN1_PIN 10 // пин, к которому подключена первая кнопка
+#define BTN2_PIN 11 // пин, к которому подключена вторая кнопка
+
 /*
  инициализация кнопок, параметры:
 * пин, к которому подключена кнопка;
@@ -12,34 +15,31 @@
 	BTN_NO - с нормально разомкнутыми контактами (по умолчанию);
 	BTN_NC - с нормально замкнутыми контактами);
 */
-shButton but_1(10); // равнозначно shButton but_1(10, PULL_UP, BTN_NO)
-shButton but_2(11);
+shButton but_1(BTN1_PIN); // равнозначно shButton but_1(BTN1_PIN, PULL_UP, BTN_NO)
+shButton but_2(BTN2_PIN);
 
 void setup()
 {
   // режим пина кнопок устанавливается автоматически
 
-  but_1.setVirtualClickOn(true); // включение режима виртуального клика 
-  but_2.setVirtualClickOn(true); 
+  but_1.setVirtualClickOn(true); // включение режима виртуального клика
+  but_2.setVirtualClickOn(true);
 
   Serial.begin(9600);
 }
 
 void loop()
 {
-  byte _but_1 = but_1.getButtonState();
-  byte _but_2 = but_2.getButtonState();
-  if ((_but_1 == BTN_DOWN && but_2.isButtonClosed()) || (_but_2 == BTN_DOWN && but_1.isButtonClosed()))
+  but_1.getButtonState();
+  but_2.getButtonState();
+  if (but_1.isSecondButtonPressed(but_2) || but_2.isSecondButtonPressed(but_1))
   { // действие по одновременно нажатым двум кнопкам
     Serial.println("Two buttons pressed");
-    // сбросить состояние обеих кнопок
-    but_1.resetButtonState();
-    but_2.resetButtonState();
   }
   else
   {
-    switch (_but_1)
-    { 
+    switch (but_1.getLastState()) // кнопка 1
+    {
     case BTN_ONECLICK:
       if (!but_2.isButtonClosed())
       { // действие по нажатию первой кнопки
@@ -48,7 +48,7 @@ void loop()
       break;
     }
 
-    switch (_but_2) // кнопка "-"
+    switch (but_2.getLastState()) // кнопка 2
     {
     case BTN_ONECLICK:
       if (!but_1.isButtonClosed())
@@ -57,5 +57,5 @@ void loop()
       }
       break;
     }
-  }  
+  }
 }

@@ -21,7 +21,7 @@ shButton but_2;
 shButton but_3;
 
 // определение положения контактов кнопки - замкнуты/не замкнуты; в функцию передается значение, полученное функцией analogRead() и пороговый уровень соответствующей кнопки - BTN_1_LVL и т.д.
-bool isButtonClosed(word lvl, word btn_lvl)
+bool isButtonPressed(word lvl, word btn_lvl)
 {
   return ((lvl >= btn_lvl - LVL_LIMIT) && (lvl <= btn_lvl + LVL_LIMIT));
 }
@@ -35,7 +35,7 @@ void loop()
 {
   // опрос кнопок, для уверенной обработки состояния кнопок опросы нужно делать как можно чаще
   word res = analogRead(BTN_PIN);
-  switch (but_1.getButtonState(isButtonClosed(res, BTN_1_LVL)))
+  switch (but_1.getButtonState(isButtonPressed(res, BTN_1_LVL)))
   {
   case BTN_DOWN:
     Serial.println("btn1_Down");
@@ -44,7 +44,7 @@ void loop()
     Serial.println("btn1_Up");
     break;
   }
-  switch (but_2.getButtonState(isButtonClosed(res, BTN_2_LVL)))
+  switch (but_2.getButtonState(isButtonPressed(res, BTN_2_LVL)))
   {
   case BTN_DOWN:
     Serial.println("btn2_Down");
@@ -53,7 +53,7 @@ void loop()
     Serial.println("btn2_Up");
     break;
   }
-  switch (but_3.getButtonState(isButtonClosed(res, BTN_3_LVL)))
+  switch (but_3.getButtonState(isButtonPressed(res, BTN_3_LVL)))
   {
   case BTN_DOWN:
     Serial.println("btn3_Down");

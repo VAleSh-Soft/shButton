@@ -9,15 +9,15 @@
   при работе с ней положение контактов кнопки определяется не 
   библиотекой, а внешним кодом
 */
-shButton btn_0;
-shButton btn_1;
-shButton btn_2;
+shButton but_0;
+shButton but_1;
+shButton but_2;
 
 // инициализация расширителя портов (схему подключения см. в даташите расширителя портов)
 Adafruit_MCP23017 mcp;
 
 // объединяем кнопки в массив для удобства работы
-shButton btnList[] = {btn_0, btn_1, btn_2};
+shButton btnList[] = {but_0, but_1, but_2};
 
 void setup()
 {
@@ -27,7 +27,7 @@ void setup()
   for (byte i = 0; i < 3; i++)
   {
     mcp.pinMode(i, INPUT);
-    mcp.pullUp(i, HIGH);  // включение подтяжки к VCC внутренними резисторами 100K
+    mcp.pullUp(i, HIGH);        // включение подтяжки к VCC внутренними резисторами 100K
     btnList[i].setDebounce(80); // установка времени антидребезга, мс (по умолчанию 50 мс)
   }
 }
@@ -39,16 +39,16 @@ void loop()
   {
     switch (btnList[i].getButtonState(!mcp.digitalRead(i)))
     {
-      case BTN_DOWN:
-        Serial.print("DOWN - btn_");
-        Serial.println(i);
-        mcp.digitalWrite((i) + 7, !mcp.digitalRead(i));
-        break;
-      case BTN_UP:
-        Serial.print("UP - btn_");
-        Serial.println(i);
-        mcp.digitalWrite((i) + 7, !mcp.digitalRead(i));
-        break;
+    case BTN_DOWN:
+      Serial.print("DOWN - but_");
+      Serial.println(i);
+      mcp.digitalWrite((i) + 7, !mcp.digitalRead(i));
+      break;
+    case BTN_UP:
+      Serial.print("UP - but_");
+      Serial.println(i);
+      mcp.digitalWrite((i) + 7, !mcp.digitalRead(i));
+      break;
     }
   }
 }

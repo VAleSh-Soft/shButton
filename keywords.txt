@@ -15,15 +15,16 @@ shButton	KEYWORD1
 getButtonState	KEYWORD2
 getLastState	KEYWORD2
 isButtonClosed	KEYWORD2
+isSecondButtonPressed	KEYWORD2
 resetButtonState	KEYWORD2
-setDebounce	KEYWORD2
-setTimeout	KEYWORD2
-setDblClickTimeout	KEYWORD2
+setTimeoutOfDebounce	KEYWORD2
+setTimeoutOfLongClick	KEYWORD2
+setTimeoutOfDblClick	KEYWORD2
 setInputType	KEYWORD2
 setButtonType	KEYWORD2
 setVirtualClickOn	KEYWORD2
 setLongClickMode	KEYWORD2
-setLongClickTimeout	KEYWORD2
+setIntervalOfSerial	KEYWORD2
 
 #######################################
 # Constants (LITERAL1)
