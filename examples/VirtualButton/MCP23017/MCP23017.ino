@@ -24,7 +24,7 @@ void setup()
   Serial.begin(9600);
   mcp.begin(); // используется адрес по умолчанию - 0
   // настраиваем пины расширителя и при необходимости настраиваем кнопки
-  for (byte i = 0; i < 3; i++)
+  for (uint8_t i = 0; i < 3; i++)
   {
     mcp.pinMode(i, INPUT);
     mcp.pullUp(i, HIGH);        // включение подтяжки к VCC внутренними резисторами 100K
@@ -35,7 +35,7 @@ void setup()
 void loop()
 {
   // опрос кнопок, для уверенной обработки состояния кнопок опросы нужно делать как можно чаще
-  for (byte i = 0; i < 3; i++)
+  for (uint8_t i = 0; i < 3; i++)
   {
     switch (btnList[i].getButtonState(!mcp.digitalRead(i)))
     {

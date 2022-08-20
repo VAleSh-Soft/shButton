@@ -47,15 +47,15 @@
 class shButton
 {
 private:
-  byte _PIN = NO_PIN;                                // пин, на который посажена кнопка
+  uint8_t _PIN = NO_PIN;                                // пин, на который посажена кнопка
   uint16_t _debounce_timeout = DEBOUNCE_TIMEOUT;     // интервал подавления дребезга контактов, мс
   uint16_t _longclick_timeout = LONGCLICK_TIMEOUT;   // интервал удержания кнопки нажатой, мс
   uint16_t _dblclck_timeout = DBLCLICK_TIMEOUT;      // интервал двойного клика, мс
-  byte _longclick_mode = LCM_CONTINUED;              // режим удержания кнопки;
+  uint8_t _longclick_mode = LCM_CONTINUED;              // режим удержания кнопки;
   uint16_t _interval_of_serial = INTERVAL_OF_SERIAL; // интервал следования события BTN_LONGCLICK, если установлен режим LCM_CLICKSERIES, мс
-  byte _btn_state = BTN_RELEASED;                    // текущее состояние кнопки
+  uint8_t _btn_state = BTN_RELEASED;                    // текущее состояние кнопки
 
-  byte _flags = 0; // набор флагов свойств и состояния кнопки
+  uint8_t _flags = 0; // набор флагов свойств и состояния кнопки
   /*
 * 0 бит - сохраненное состояние кнопки - нажата(1)/не нажата(0)
 * 1 бит - тип подключения - PULL_UP(0)/PULL_DOWN(1)
@@ -75,60 +75,127 @@ private:
   // установка кнопке состояния "только что нажата" или "только что отпущена"
   void setBtnUpDown(bool flag, uint32_t thisMls);
   // получение состояния бита
-  bool getFlag(byte _bit);
+  bool getFlag(uint8_t _bit);
   // установка состояния бита
-  void setFlag(byte _bit, bool x);
+  void setFlag(uint8_t _bit, bool x);
 
 public:
-  // Варианты инициализации:
-  // shButton btn(пин);	 - с привязкой к пину и без указания типа подключения (по умолч. PULL_UP) и типа контактов (по умолчанию BTN_NO - нормально разомкнутые контакты)
-  // shButton btn(пин, тип подключения);	- с привязкой к пину и указанием типа подключения (PULL_UP / PULL_DOWN)
-  // shButton btn(пин, тип подключения, тип кнопки);	- с привязкой к пину и указанием типа подключения (PULL_UP / PULL_DOWN) и типа кнопки (BTN_NO/BTN_NC)
-  shButton(byte pin, byte inputtype = PULL_UP, byte btntype = BTN_NO);
-  // shButton btn; - без привязки к конкретному пину и указания типов подключения и кнопки - режим виртуальной кнопки
+  /**
+   * @brief конструктор кнопки;
+   * 
+   * @param pin пин, к которому подключена кнопка;
+   * @param inputtype тип подключения (PULL_UP / PULL_DOWN), т.е. с подтяжкой к VCC или к GND;
+   * @param btntype тип кнопки (BTN_NO / BTN_NC), т.е. с нормально разомкнутыми или нормально замкнутыми контактами;
+   */
+  shButton(uint8_t pin, uint8_t inputtype = PULL_UP, uint8_t btntype = BTN_NO);
+
+  /**
+   * @brief конструктор виртуальной кнопки, без привязки к конкретному пину и указанию типа подключения и типа кнопки; 
+   * использование - shButton btn; 
+   */
   shButton();
 
-  // получение состояния кнопки - отпущена/нажата/удерживается в режиме виртуальной кнопки
-  // положение кнопки - нажата/не нажата для определения ее состояния
-  byte getButtonState(bool isClosed);
+  /**
+   * @brief получение состояния кнопки - отпущена/нажата/удерживается;
+   * 
+   * @return uint8_t, текущее состояние кнопки (BTN_RELEASED .. BTN_LONGCLICK);
+   */
+  uint8_t getButtonState();
 
-  // получение состояния кнопки - отпущена/нажата/удерживается в режиме обычной кнопки
-  byte getButtonState();
+  /**
+   * @brief получение состояния кнопки - отпущена/нажата/удерживается в режиме виртуальной кнопки;
+   * 
+   * @param isClosed текущее положение контактов кнопки, определяется внешним кодом
+   * @return uint8_t, текущее состояние кнопки (BTN_RELEASED .. BTN_LONGCLICK);
+   */
+  uint8_t getButtonState(bool isClosed);
 
-  // получение последнего состояния кнопки; запрашивает статус кнопки, определенный последним вызовом метода getButtonState()
-  byte getLastState();
+  /**
+   * @brief получение последнего состояния кнопки; запрашивает статус кнопки, определенный последним вызовом метода getButtonState();
+   * 
+   * @return uint8_t, текущее состояние кнопки (BTN_RELEASED .. BTN_LONGCLICK); 
+   */
+  uint8_t getLastState();
 
-  // возвращает true, если контакты кнопки по результату последней проверки замкнуты; если toChecked == true будет выполнен опрос кнопки
-  bool isButtonClosed(bool toChecked = false);
+  /**
+   * @brief возвращает true, если по результатам последнего вызова метода getButtonState() кнопка нажата;
+   * 
+   * @param toChecked 
+   * @return true кнопка нажата;
+   * @return false кнопка не нажата;
+   */
+  bool isButtonClosed();
 
-  // возвращает true, если в момент возникновения события BTN_DOWN текущей кнопки кнопка _but уже нажата
+  /**
+   * @brief определение одновременного нажатия двух кнопок; возвращает true, если в момент возникновения события BTN_DOWN текущей кнопки кнопка _but уже нажата; если метод вернул true, состояние обеих кнопок сбрасывается;
+   * 
+   * @param _but вторая кнопка, состояние которой проверяется
+   * @return true - кнопка _but уже нажата; 
+   * @return false - кнопка _but не нажата;
+   */
   bool isSecondButtonPressed(shButton &_but);
 
-  // принудительный сброс состояния кнопки; может понадобиться, если по каким-то причинам нужно, например, исключить возникновение событий BTN_ONECLICK и BTN_DBLCLICK
+  /**
+   * @brief принудительный сброс состояния кнопки; может понадобиться, если по каким-то причинам нужно, например, исключить возникновение событий BTN_ONECLICK и BTN_DBLCLICK;
+   * 
+   */
   void resetButtonState();
 
-  // установка типа подключения кнопки (PULL_UP - подтянута к VCC, PULL_DOWN - к GND)
-  void setInputType(byte inputtype);
+  /**
+   * @brief установка типа подключения кнопки;
+   * 
+   * @param inputtype тип подключения кнопки (PULL_UP - подтянута к VCC, PULL_DOWN - к GND);
+   */
+  void setInputType(uint8_t inputtype);
 
-  // установка типа кнопки (BTN_NO - нормально разомкнутая, BTN_NC - нормально замкнутая)
-  void setButtonType(byte btntype);
+  //  
+  /**
+   * @brief установка типа кнопки;
+   * 
+   * @param btntype тип кнопки (BTN_NO - нормально разомкнутая, BTN_NC - нормально замкнутая);
+   */
+  void setButtonType(uint8_t btntype);
 
-  // установка времени антидребезга (по умолчанию 50 мс); для отключения антидребезга нужно задать 0 мс
+  /**
+   * @brief установка интервала подавления антидребезга (значение по умолчанию 50 мс); для отключения антидребезга нужно задать 0 мс;
+   * 
+   * @param new_timeout новое значение интервала подавления антидребезга в милисекундах;
+   */
   void setTimeoutOfDebounce(uint16_t new_timeout);
 
-  // установка таймаута удержания кнопки (по умолчанию 500 мс)
+  /**
+   * @brief установка интервала удержания кнопки (значение по умолчанию 500 мс);
+   * 
+   * @param new_timeout новое значение интервала удержания кнопки в милисекундах;
+   */
   void setTimeoutOfLongClick(uint16_t new_timeout);
 
-  // установка интервала двойного клика (по умолчанию 300 мс)
+  /**
+   * @brief установка интервала двойного клика (значение по умолчанию 300 мс);
+   * 
+   * @param new_timeout новое значение интервала двойного клика в милисекундах;
+   */
   void setTimeoutOfDblClick(uint16_t new_timeout);
 
-  // включение режима "Виртуальный клик"
-  void setVirtualClickOn(bool virtualclick_on);
+  /**
+   * @brief включение режима "Виртуальный клик";
+   * 
+   * @param virtualclick_on true - включение режима; false - отключение режима;
+   */
+  void setVirtualClickOn(bool virtualclick_on = true);
 
-  // установка режима обработки удержания кнопки нажатой
-  void setLongClickMode(byte longclickmode);
+  /**
+   * @brief установка режима обработки удержания кнопки нажатой
+   * 
+   * @param longclickmode режим обработки удержания кнопки (LCM_CONTINUED, LCM_ONLYONCE или LCM_CLICKSERIES);
+   */
+  void setLongClickMode(uint8_t longclickmode);
 
-  // установка интервала выдачи события BTN_LONGCLICK в режиме LCM_CLICKSERIES
+  /**
+   * @brief установка интервала выдачи события BTN_LONGCLICK в режиме LCM_CLICKSERIES (значение по умолчанию 200 мс); установка значения 0 переведет кнопку в режим LCM_ONLYONCE;
+   * 
+   * @param new_interval новое значение интервала в милисекундах;
+   */
   void setIntervalOfSerial(uint16_t new_interval);
 
   // ==== deprecated ============================

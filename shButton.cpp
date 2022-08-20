@@ -1,7 +1,7 @@
 #include "shButton.h"
 #include <Arduino.h>
 
-shButton::shButton(byte pin, byte inputtype, byte btntype)
+shButton::shButton(uint8_t pin, uint8_t inputtype, uint8_t btntype)
 {
   _PIN = pin;
   setInputType(inputtype);
@@ -13,7 +13,7 @@ shButton::shButton()
   setFlag(VIRTUALBUTTON_BIT, true);
 }
 
-byte shButton::getButtonState(bool isClosed)
+uint8_t shButton::getButtonState(bool isClosed)
 {
   uint32_t thisMls = millis();
   // состояние кнопки не изменилось с прошлого опроса
@@ -101,22 +101,18 @@ byte shButton::getButtonState(bool isClosed)
   return (_btn_state);
 }
 
-byte shButton::getButtonState()
+uint8_t shButton::getButtonState()
 {
   return (getButtonState(getButtonFlag()));
 }
 
-byte shButton::getLastState()
+uint8_t shButton::getLastState()
 {
   return (_btn_state);
 }
 
-bool shButton::isButtonClosed(bool toChecked)
+bool shButton::isButtonClosed()
 {
-  if ((toChecked) && (!getFlag(VIRTUALBUTTON_BIT)))
-  {
-    getButtonState();
-  }
   // BTN_ONECLICK фактически тоже означает, что в данный момент кнопка не нажата (см. описание события)
   return (_btn_state != BTN_RELEASED && _btn_state != BTN_UP && _btn_state != BTN_ONECLICK);
 }
@@ -141,7 +137,7 @@ void shButton::resetButtonState()
   _btn_state = isButtonClosed();
 }
 
-void shButton::setInputType(byte inputtype)
+void shButton::setInputType(uint8_t inputtype)
 {
   setFlag(INPUTTYPE_BIT, inputtype);
   switch (inputtype)
@@ -155,7 +151,7 @@ void shButton::setInputType(byte inputtype)
   }
 }
 
-void shButton::setButtonType(byte btntype)
+void shButton::setButtonType(uint8_t btntype)
 {
   setFlag(BTNTYPE_BIT, btntype);
 }
@@ -180,7 +176,7 @@ void shButton::setVirtualClickOn(bool virtualclick_on)
   setFlag(VIRTUALCLICK_BIT, virtualclick_on);
 }
 
-void shButton::setLongClickMode(byte longclickmode)
+void shButton::setLongClickMode(uint8_t longclickmode)
 {
   _longclick_mode = longclickmode;
   if (_longclick_mode == LCM_CLICKSERIES && _interval_of_serial == 0)
@@ -242,13 +238,13 @@ void shButton::setBtnUpDown(bool flag, uint32_t thisMls)
   }
 }
 
-bool shButton::getFlag(byte _bit)
+bool shButton::getFlag(uint8_t _bit)
 {
   bool result = (_bit < 8) ? (((_flags) >> (_bit)) & 0x01) : false;
   return (result);
 }
 
-void shButton::setFlag(byte _bit, bool x)
+void shButton::setFlag(uint8_t _bit, bool x)
 {
   if (_bit < 8)
   {

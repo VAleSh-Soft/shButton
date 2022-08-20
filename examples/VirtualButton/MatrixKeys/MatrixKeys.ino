@@ -5,8 +5,8 @@
 #define rows 4 // количество строк
 #define cols 3 // количество столбцов
 
-const byte rowsPin[] = {11, 10, 9, 8}; // пины строк
-const byte colsPin[] = {7, 6, 5};      // пины столбцов
+const uint8_t rowsPin[] = {11, 10, 9, 8}; // пины строк
+const uint8_t colsPin[] = {7, 6, 5};      // пины столбцов
 
 /* инициализация кнопок
   для виртуальной кнопки не нужно указывать никаких параметров, т.к. 
@@ -59,10 +59,10 @@ void setup()
 void loop()
 {
   // опрос кнопок, для уверенной обработки состояния кнопок опросы нужно делать как можно чаще
-  for (byte r = 0; r < rows; r++)
+  for (uint8_t r = 0; r < rows; r++)
   {
     digitalWrite(rowsPin[r], LOW);  // последовательно выставляем по одной строке в LOW
-    for (byte c = 0; c < cols; c++) // и считываем столбцы, определяя состояние кнопок
+    for (uint8_t c = 0; c < cols; c++) // и считываем столбцы, определяя состояние кнопок
     {
       switch (btnList[r][c].getButtonState(!digitalRead(colsPin[c])))
       {
