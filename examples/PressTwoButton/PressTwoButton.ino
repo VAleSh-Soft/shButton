@@ -22,8 +22,8 @@ void setup()
 {
   // режим пина кнопок устанавливается автоматически
 
-  but_1.setVirtualClickOn(true); // включение режима виртуального клика
-  but_2.setVirtualClickOn(true);
+  but_1.setVirtualClickOn(); // включение режима виртуального клика
+  but_2.setVirtualClickOn();
 
   Serial.begin(9600);
 }
