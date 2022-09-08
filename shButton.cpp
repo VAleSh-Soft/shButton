@@ -251,25 +251,3 @@ void shButton::setFlag(uint8_t _bit, bool x)
     (x) ? (_flags) |= (1UL << (_bit)) : (_flags) &= ~(1UL << (_bit));
   }
 }
-
-// ==== deprecated ===================================
-
-void shButton::setLongClickTimeout(uint16_t new_timeout)
-{
-  setIntervalOfSerial(new_timeout);
-}
-
-void shButton::setDblClickTimeout(uint16_t new_timeout)
-{
-  setTimeoutOfDblClick(new_timeout);
-}
-
-void shButton::setTimeout(uint16_t new_timeout)
-{
-  setTimeoutOfLongClick(new_timeout);
-}
-
-void shButton::setDebounce(uint16_t debounce)
-{
-  setTimeoutOfDebounce(debounce);
-}

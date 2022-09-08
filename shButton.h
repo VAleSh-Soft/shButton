@@ -47,25 +47,25 @@
 class shButton
 {
 private:
-  uint8_t _PIN = NO_PIN;                                // пин, на который посажена кнопка
+  uint8_t _PIN = NO_PIN;                             // пин, на который посажена кнопка
   uint16_t _debounce_timeout = DEBOUNCE_TIMEOUT;     // интервал подавления дребезга контактов, мс
   uint16_t _longclick_timeout = LONGCLICK_TIMEOUT;   // интервал удержания кнопки нажатой, мс
   uint16_t _dblclck_timeout = DBLCLICK_TIMEOUT;      // интервал двойного клика, мс
-  uint8_t _longclick_mode = LCM_CONTINUED;              // режим удержания кнопки;
+  uint8_t _longclick_mode = LCM_CONTINUED;           // режим удержания кнопки;
   uint16_t _interval_of_serial = INTERVAL_OF_SERIAL; // интервал следования события BTN_LONGCLICK, если установлен режим LCM_CLICKSERIES, мс
-  uint8_t _btn_state = BTN_RELEASED;                    // текущее состояние кнопки
+  uint8_t _btn_state = BTN_RELEASED;                 // текущее состояние кнопки
 
   uint8_t _flags = 0; // набор флагов свойств и состояния кнопки
   /*
-* 0 бит - сохраненное состояние кнопки - нажата(1)/не нажата(0)
-* 1 бит - тип подключения - PULL_UP(0)/PULL_DOWN(1)
-* 2 бит - тип кнопки - нормально разомкнутая (BTN_NO(0)) или нормально замкнутая (BTN_NC(1))
-* 3 бит - флаг включения подавления дребезга - пока флаг поднят (1), изменения состояния не принимаются
-* 4 бит - режим виртуального клика, 0 - выключен, 1 - включен
-* 5 бит - флаг виртуальной кнопки, 0 - обычная кнопка, 1 - виртуальная кнопка
-* 6 бит - флаг одиночного клика, 0 - не было, 1 - был одиночный клик
-* 7 бит - флаг длинного клика, 0 - не было, 1 - был длинный клик
-  */
+   * 0 бит - сохраненное состояние кнопки - нажата(1)/не нажата(0)
+   * 1 бит - тип подключения - PULL_UP(0)/PULL_DOWN(1)
+   * 2 бит - тип кнопки - нормально разомкнутая (BTN_NO(0)) или нормально замкнутая (BTN_NC(1))
+   * 3 бит - флаг включения подавления дребезга - пока флаг поднят (1), изменения состояния не принимаются
+   * 4 бит - режим виртуального клика, 0 - выключен, 1 - включен
+   * 5 бит - флаг виртуальной кнопки, 0 - обычная кнопка, 1 - виртуальная кнопка
+   * 6 бит - флаг одиночного клика, 0 - не было, 1 - был одиночный клик
+   * 7 бит - флаг длинного клика, 0 - не было, 1 - был длинный клик
+   */
 
   uint32_t btn_timer = 0; // таймер отработки подавления дребезга контактов и длинного клика
   uint32_t dbl_timer = 0; // таймер двойного клика
@@ -82,7 +82,7 @@ private:
 public:
   /**
    * @brief конструктор кнопки;
-   * 
+   *
    * @param pin пин, к которому подключена кнопка;
    * @param inputtype тип подключения (PULL_UP / PULL_DOWN), т.е. с подтяжкой к VCC или к GND;
    * @param btntype тип кнопки (BTN_NO / BTN_NC), т.е. с нормально разомкнутыми или нормально замкнутыми контактами;
@@ -90,21 +90,21 @@ public:
   shButton(uint8_t pin, uint8_t inputtype = PULL_UP, uint8_t btntype = BTN_NO);
 
   /**
-   * @brief конструктор виртуальной кнопки, без привязки к конкретному пину и указанию типа подключения и типа кнопки; 
-   * использование - shButton btn; 
+   * @brief конструктор виртуальной кнопки, без привязки к конкретному пину и указанию типа подключения и типа кнопки;
+   * использование - shButton btn;
    */
   shButton();
 
   /**
    * @brief получение состояния кнопки - отпущена/нажата/удерживается;
-   * 
+   *
    * @return uint8_t, текущее состояние кнопки (BTN_RELEASED .. BTN_LONGCLICK);
    */
   uint8_t getButtonState();
 
   /**
    * @brief получение состояния кнопки - отпущена/нажата/удерживается в режиме виртуальной кнопки;
-   * 
+   *
    * @param isClosed текущее положение контактов кнопки, определяется внешним кодом
    * @return uint8_t, текущее состояние кнопки (BTN_RELEASED .. BTN_LONGCLICK);
    */
@@ -112,15 +112,15 @@ public:
 
   /**
    * @brief получение последнего состояния кнопки; запрашивает статус кнопки, определенный последним вызовом метода getButtonState();
-   * 
-   * @return uint8_t, текущее состояние кнопки (BTN_RELEASED .. BTN_LONGCLICK); 
+   *
+   * @return uint8_t, текущее состояние кнопки (BTN_RELEASED .. BTN_LONGCLICK);
    */
   uint8_t getLastState();
 
   /**
    * @brief возвращает true, если по результатам последнего вызова метода getButtonState() кнопка нажата;
-   * 
-   * @param toChecked 
+   *
+   * @param toChecked
    * @return true кнопка нажата;
    * @return false кнопка не нажата;
    */
@@ -128,72 +128,72 @@ public:
 
   /**
    * @brief определение одновременного нажатия двух кнопок; возвращает true, если в момент возникновения события BTN_DOWN текущей кнопки кнопка _but уже нажата; если метод вернул true, состояние обеих кнопок сбрасывается;
-   * 
+   *
    * @param _but вторая кнопка, состояние которой проверяется
-   * @return true - кнопка _but уже нажата; 
+   * @return true - кнопка _but уже нажата;
    * @return false - кнопка _but не нажата;
    */
   bool isSecondButtonPressed(shButton &_but);
 
   /**
    * @brief принудительный сброс состояния кнопки; может понадобиться, если по каким-то причинам нужно, например, исключить возникновение событий BTN_ONECLICK и BTN_DBLCLICK;
-   * 
+   *
    */
   void resetButtonState();
 
   /**
    * @brief установка типа подключения кнопки;
-   * 
+   *
    * @param inputtype тип подключения кнопки (PULL_UP - подтянута к VCC, PULL_DOWN - к GND);
    */
   void setInputType(uint8_t inputtype);
 
-  //  
+  //
   /**
    * @brief установка типа кнопки;
-   * 
+   *
    * @param btntype тип кнопки (BTN_NO - нормально разомкнутая, BTN_NC - нормально замкнутая);
    */
   void setButtonType(uint8_t btntype);
 
   /**
    * @brief установка интервала подавления антидребезга (значение по умолчанию 50 мс); для отключения антидребезга нужно задать 0 мс;
-   * 
+   *
    * @param new_timeout новое значение интервала подавления антидребезга в милисекундах;
    */
   void setTimeoutOfDebounce(uint16_t new_timeout);
 
   /**
    * @brief установка интервала удержания кнопки (значение по умолчанию 500 мс);
-   * 
+   *
    * @param new_timeout новое значение интервала удержания кнопки в милисекундах;
    */
   void setTimeoutOfLongClick(uint16_t new_timeout);
 
   /**
    * @brief установка интервала двойного клика (значение по умолчанию 300 мс);
-   * 
+   *
    * @param new_timeout новое значение интервала двойного клика в милисекундах;
    */
   void setTimeoutOfDblClick(uint16_t new_timeout);
 
   /**
    * @brief включение режима "Виртуальный клик";
-   * 
+   *
    * @param virtualclick_on true - включение режима; false - отключение режима;
    */
   void setVirtualClickOn(bool virtualclick_on = true);
 
   /**
    * @brief установка режима обработки удержания кнопки нажатой
-   * 
+   *
    * @param longclickmode режим обработки удержания кнопки (LCM_CONTINUED, LCM_ONLYONCE или LCM_CLICKSERIES);
    */
   void setLongClickMode(uint8_t longclickmode);
 
   /**
    * @brief установка интервала выдачи события BTN_LONGCLICK в режиме LCM_CLICKSERIES (значение по умолчанию 200 мс); установка значения 0 переведет кнопку в режим LCM_ONLYONCE;
-   * 
+   *
    * @param new_interval новое значение интервала в милисекундах;
    */
   void setIntervalOfSerial(uint16_t new_interval);
@@ -201,14 +201,26 @@ public:
   // ==== deprecated ============================
 
   // метод устарел, используйте метод setIntervalOfSerial(uint16_t)
-  [[deprecated("Используйте метод setIntervalOfSerial(uint16_t); Use setIntervalOfSerial(uint16_t) function")]] void setLongClickTimeout(uint16_t new_timeout);
+  void setLongClickTimeout(uint16_t new_timeout) __attribute__((deprecated("Используйте метод setIntervalOfSerial(uint16_t); Use setIntervalOfSerial(uint16_t) function")))
+  {
+    setIntervalOfSerial(new_timeout);
+  }
 
   // метод устарел, используйте метод setTimeoutOfDblClick(uint16_t)
-  [[deprecated("Используйте метод setTimeoutOfDblClick(uint16_t); Use the setTimeoutOfDblClick(uint16_t) function")]] void setDblClickTimeout(uint16_t new_timeout);
+  void setDblClickTimeout(uint16_t new_timeout) __attribute__((deprecated("Используйте метод setTimeoutOfDblClick(uint16_t); Use the setTimeoutOfDblClick(uint16_t) function")))
+  {
+    setTimeoutOfDblClick(new_timeout);
+  }
 
   // метод устарел, используйте метод setTimeoutOfLongClick(uint16_t)
-  [[deprecated("Используйте метод setTimeoutOfLongClick(uint16_t); Use the setTimeoutOfLongClick(uint16_t) function")]] void setTimeout(uint16_t new_timeout);
+  void setTimeout(uint16_t new_timeout) __attribute__((deprecated("Используйте метод setTimeoutOfLongClick(uint16_t); Use the setTimeoutOfLongClick(uint16_t) function")))
+  {
+    setTimeoutOfLongClick(new_timeout);
+  }
 
   // метод устарел, используйте метод setTimeoutOfDebounce(uint16_t)
-  [[deprecated("Используйте метод setTimeoutOfDebounce(uint16_t); Use the setTimeoutOfDebounce(uint16_t) function")]] void setDebounce(uint16_t debounce);
+  void setDebounce(uint16_t debounce) __attribute__((deprecated("Используйте метод setTimeoutOfDebounce(uint16_t); Use the setTimeoutOfDebounce(uint16_t) function")))
+  {
+    setTimeoutOfDebounce(debounce);
+  }
 };
