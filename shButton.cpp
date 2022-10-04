@@ -117,10 +117,10 @@ bool shButton::isButtonClosed()
   return (_btn_state != BTN_RELEASED && _btn_state != BTN_UP && _btn_state != BTN_ONECLICK);
 }
 
-bool shButton::isSecondButtonPressed(shButton &_but)
+bool shButton::isSecondButtonPressed(shButton &_but, byte btn_state)
 {
   bool result = false;
-  if (getLastState() == BTN_DOWN && _but.isButtonClosed())
+  if (getLastState() == btn_state && _but.isButtonClosed())
   {
     result = true;
     resetButtonState();
