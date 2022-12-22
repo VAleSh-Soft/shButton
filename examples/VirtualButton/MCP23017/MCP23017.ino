@@ -1,8 +1,17 @@
+/**
+ * @file MCP23017.ino
+ * @author Vladimir Shatalov (valesh-soft@yandex.ru)
+ * @brief 
+ * @version 1.0
+ * @date 14.05.2021
+ * 
+ * @copyright Copyright (c) 2022
+ * 
+ * пример работы с виртуальными кнопками на примере расширителя портов MCP23017
+ */
 #include <Wire.h>
 #include <Adafruit_MCP23017.h> // https://github.com/adafruit/Adafruit-MCP23017-Arduino-Library
 #include <shButton.h>
-
-// пример работы с виртуальными кнопками на примере расширителя портов MCP23017
 
 /* инициализация кнопок
   для виртуальной кнопки не нужно указывать никаких параметров, т.к. 

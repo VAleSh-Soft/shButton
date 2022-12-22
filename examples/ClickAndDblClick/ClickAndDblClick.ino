@@ -1,6 +1,16 @@
-#include <shButton.h>
-
-// Пример раздельной реакции на одинарный и двойной клик кнопкой с использованием режима виртуального клика
+/**
+ * @file ClickAndDblClick.ino
+ * @author Vladimir Shatalov (valesh-soft@yandex.ru)
+ * @brief 
+ * @version 2.0
+ * @date 22.08.2022
+ * 
+ * @copyright Copyright (c) 2022
+ * 
+ * Пример раздельной реакции на одинарный и двойной клик кнопкой с 
+ * использованием режима виртуального клика
+ */
+#include <shButton.h> 
 
 #define BTN_PIN 10 // пин, к которому подключена кнопка
 

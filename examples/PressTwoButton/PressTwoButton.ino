@@ -1,6 +1,15 @@
+/**
+ * @file PressTwoButton.ino
+ * @author Vladimir Shatalov (valesh-soft@yandex.ru)
+ * @brief 
+ * @version 2.0
+ * @date 22.08.2022
+ * 
+ * @copyright Copyright (c) 2022
+ * 
+ * Пример обработки одновременного нажатия на две кнопки
+ */
 #include <shButton.h>
-
-// Пример обработки одновременного нажатия на две кнопки
 
 #define BTN1_PIN 10 // пин, к которому подключена первая кнопка
 #define BTN2_PIN 11 // пин, к которому подключена вторая кнопка

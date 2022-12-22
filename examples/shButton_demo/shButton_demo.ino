@@ -1,6 +1,15 @@
+/**
+ * @file shButton_demo.ino
+ * @author Vladimir Shatalov (valesh-soft@yandex.ru)
+ * @brief 
+ * @version 2.0
+ * @date 20.08.2022
+ * 
+ * @copyright Copyright (c) 2022
+ * 
+ * демонстрация основных возможностей для работы с тактовой кнопкой
+ */
 #include <shButton.h>
-
-// демонстрация основных возможностей для работы с тактовой кнопкой
 
 #define BTN_PIN 10 // пин, к которому подключена кнопка
 

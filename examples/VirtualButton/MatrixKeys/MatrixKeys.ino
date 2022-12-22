@@ -1,6 +1,15 @@
+/**
+ * @file MatrixKeys.ino
+ * @author Vladimir Shatalov (valesh-soft@yandex.ru)
+ * @brief 
+ * @version 1.0
+ * @date 14.05.2021
+ * 
+ * @copyright Copyright (c) 2022
+ * 
+ * пример работы с виртуальными кнопками на примере матричной клавиатуры 4х3
+ */
 #include <shButton.h>
-
-// пример работы с виртуальными кнопками на примере матричной клавиатуры 4х3
 
 #define rows 4 // количество строк
 #define cols 3 // количество столбцов
