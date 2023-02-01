@@ -1,5 +1,10 @@
-#pragma once
+// #pragma once
+#ifndef SH_BUTTON_H
+#define SH_BUTTON_H
+
 #include <Arduino.h>
+
+// #define USE_BUTTON_FLAG // использовать или нет флаг для передачи данных
 
 // флаги свойств и состояния кнопки - биты поля _flags
 #define FLAG_BIT 0          // сохраненное состояние кнопки - нажата/не нажата
@@ -34,7 +39,6 @@
 #define BTN_UP 2       // кнопка только что отпущена
 #define BTN_DOWN 3     // кнопка только что нажата
 #define BTN_DBLCLICK 4 // двойной клик - второе нажатие до истечения интервала двойного клика; если непрерывно щелкать кнопкой, будут поочередно выдаваться события BTN_DOWN и BTN_DBLCLICK
-
 
 // виртуальные события кнопки
 #define BTN_ONECLICK 5  // одиночный клик, следует через некоторый интервал после нажатия кнопки, если за это время не последовал двойной клик или длительное удержание кнопки нажатой; по умолчанию событие отключено
@@ -72,7 +76,7 @@ private:
   uint32_t dbl_timer = 0; // таймер двойного клика
 
   // получение мгновенного состояния кнопки - нажата/не нажата с учетом типа подключения и без учета дребезга контактов
-  bool getButtonFlag();
+  bool getContactsState();
   // установка кнопке состояния "только что нажата" или "только что отпущена"
   void setBtnUpDown(bool flag, uint32_t thisMls);
   // получение состояния бита
@@ -80,6 +84,9 @@ private:
   // установка состояния бита
   void setFlag(uint8_t _bit, bool x);
 
+#ifdef USE_BUTTON_FLAG
+  uint8_t btn_flag = 0;
+#endif
 public:
   /**
    * @brief конструктор кнопки;
@@ -197,6 +204,37 @@ public:
    */
   void setIntervalOfSerial(uint16_t new_interval);
 
+  /**
+   * @brief считать флаг кнопки
+   *
+   * @param _clear если true - после считывания установить флаг в 0
+   * @return uint8_t
+   */
+  uint8_t getButtonFlag(bool _clear = false)
+  {
+#ifdef USE_BUTTON_FLAG
+    uint8_t result = btn_flag;
+    if (_clear)
+    {
+      btn_flag = 0;
+    }
+    return (result);
+#else
+    return (0);
+#endif
+  }
+  /**
+   * @brief установить флаг кнопки
+   *
+   * @param _flag устанавливаемое значение
+   */
+  void setButtonFlag(uint8_t _flag)
+  {
+#ifdef USE_BUTTON_FLAG
+    btn_flag = _flag;
+#endif
+  }
+
   // ==== deprecated ============================
 
   // метод устарел, используйте метод setIntervalOfSerial(uint16_t)
@@ -223,3 +261,5 @@ public:
     setTimeoutOfDebounce(debounce);
   }
 };
+
+#endif

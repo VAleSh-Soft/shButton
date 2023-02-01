@@ -1,6 +1,8 @@
 #include "shButton.h"
 #include <Arduino.h>
 
+// ==== public =======================================
+
 shButton::shButton(uint8_t pin, uint8_t inputtype, uint8_t btntype)
 {
   _PIN = pin;
@@ -103,7 +105,7 @@ uint8_t shButton::getButtonState(bool isClosed)
 
 uint8_t shButton::getButtonState()
 {
-  return (getButtonState(getButtonFlag()));
+  return (getButtonState(getContactsState()));
 }
 
 uint8_t shButton::getLastState()
@@ -195,7 +197,9 @@ void shButton::setIntervalOfSerial(uint16_t new_interval)
   }
 }
 
-bool shButton::getButtonFlag()
+// ==== private ======================================
+
+bool shButton::getContactsState()
 {
   bool val = false;
   if (!getFlag(VIRTUALBUTTON_BIT))
@@ -251,3 +255,4 @@ void shButton::setFlag(uint8_t _bit, bool x)
     (x) ? (_flags) |= (1UL << (_bit)) : (_flags) &= ~(1UL << (_bit));
   }
 }
+
