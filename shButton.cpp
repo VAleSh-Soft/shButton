@@ -18,6 +18,15 @@ shButton::shButton()
 uint8_t shButton::getButtonState(bool isClosed)
 {
   uint32_t thisMls = millis();
+
+  // если поднят флаг подавления дребезга и интервал еще не вышел, больше ничего не делать
+  if (_debounce_timeout > 0 &&
+      getFlag(DEBOUNCE_BIT) &&
+      thisMls - btn_timer < _debounce_timeout)
+  {
+    return (_btn_state);
+  }
+
   // состояние кнопки не изменилось с прошлого опроса
   if (isClosed == getFlag(FLAG_BIT))
   { // и не поднят флаг подавления дребезга
@@ -87,6 +96,11 @@ uint8_t shButton::getButtonState(bool isClosed)
       {
         btn_timer = thisMls;
         setFlag(DEBOUNCE_BIT, true);
+        // и заодно сбросить переменную _btn_state, чтобы не выскакивали множественные события типа BTN_DOWN пока не истечет интервал антидребезга; исключение - состояние удержания кнопки в режиме непрерывного события
+        if (!(_btn_state == BTN_LONGCLICK && _longclick_mode == LCM_CONTINUED))
+        {
+          _btn_state = isButtonClosed();
+        }
       } // иначе, если поднят, и интервал вышел - установить состояние кнопки
       else if (thisMls - btn_timer >= _debounce_timeout)
       {
@@ -115,8 +129,7 @@ uint8_t shButton::getLastState()
 
 bool shButton::isButtonClosed()
 {
-  // BTN_ONECLICK фактически тоже означает, что в данный момент кнопка не нажата (см. описание события)
-  return (_btn_state != BTN_RELEASED && _btn_state != BTN_UP && _btn_state != BTN_ONECLICK);
+  return (getFlag(FLAG_BIT));
 }
 
 bool shButton::isSecondButtonPressed(shButton &_but, byte btn_state)
@@ -255,4 +268,3 @@ void shButton::setFlag(uint8_t _bit, bool x)
     (x) ? (_flags) |= (1UL << (_bit)) : (_flags) &= ~(1UL << (_bit));
   }
 }
-

@@ -1,8 +1,8 @@
 *.zip
 Thumbs.db
 .vscode/*
-*.vsd
-*.~vsd
+*.odg
+*.odg#
 shButton.dia
 shButton.dia~
 .gitignore
