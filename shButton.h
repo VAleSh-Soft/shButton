@@ -204,6 +204,7 @@ public:
    */
   void setIntervalOfSerial(uint16_t new_interval);
 
+#ifdef USE_BUTTON_FLAG
   /**
    * @brief считать флаг кнопки
    *
@@ -212,17 +213,16 @@ public:
    */
   uint8_t getButtonFlag(bool _clear = false)
   {
-#ifdef USE_BUTTON_FLAG
     uint8_t result = btn_flag;
     if (_clear)
     {
       btn_flag = 0;
     }
     return (result);
-#else
-    return (0);
-#endif
   }
+#endif
+
+#ifdef USE_BUTTON_FLAG
   /**
    * @brief установить флаг кнопки
    *
@@ -230,10 +230,9 @@ public:
    */
   void setButtonFlag(uint8_t _flag)
   {
-#ifdef USE_BUTTON_FLAG
     btn_flag = _flag;
-#endif
   }
+#endif
 
   // ==== deprecated ============================
 
