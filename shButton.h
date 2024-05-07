@@ -84,7 +84,7 @@ private:
   // установка состояния бита
   void setFlag(uint8_t _bit, bool x);
 
-#ifdef USE_BUTTON_FLAG
+#if defined(USE_BUTTON_FLAG)
   uint8_t btn_flag = 0;
 #endif
 public:
@@ -204,7 +204,7 @@ public:
    */
   void setIntervalOfSerial(uint16_t new_interval);
 
-#ifdef USE_BUTTON_FLAG
+#if defined(USE_BUTTON_FLAG)
   /**
    * @brief считать флаг кнопки
    *
@@ -220,9 +220,7 @@ public:
     }
     return (result);
   }
-#endif
 
-#ifdef USE_BUTTON_FLAG
   /**
    * @brief установить флаг кнопки
    *
