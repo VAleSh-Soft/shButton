@@ -432,7 +432,7 @@ void shButton::setIntervalOfSerial(uint16_t new_interval)
 }
 
 #if defined(USE_BUTTON_FLAG)
-  uint8_t shButton::getButtonFlag(bool _clear = false)
+  uint8_t shButton::getButtonFlag(bool _clear)
   {
     uint8_t result = btn_flag;
     if (_clear)
