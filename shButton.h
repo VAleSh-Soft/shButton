@@ -231,32 +231,6 @@ public:
     btn_flag = _flag;
   }
 #endif
-
-  // ==== deprecated ============================
-
-  // метод устарел, используйте метод setIntervalOfSerial(uint16_t)
-  void setLongClickTimeout(uint16_t new_timeout) __attribute__((deprecated("Используйте метод setIntervalOfSerial(uint16_t); Use setIntervalOfSerial(uint16_t) function")))
-  {
-    setIntervalOfSerial(new_timeout);
-  }
-
-  // метод устарел, используйте метод setTimeoutOfDblClick(uint16_t)
-  void setDblClickTimeout(uint16_t new_timeout) __attribute__((deprecated("Используйте метод setTimeoutOfDblClick(uint16_t); Use the setTimeoutOfDblClick(uint16_t) function")))
-  {
-    setTimeoutOfDblClick(new_timeout);
-  }
-
-  // метод устарел, используйте метод setTimeoutOfLongClick(uint16_t)
-  void setTimeout(uint16_t new_timeout) __attribute__((deprecated("Используйте метод setTimeoutOfLongClick(uint16_t); Use the setTimeoutOfLongClick(uint16_t) function")))
-  {
-    setTimeoutOfLongClick(new_timeout);
-  }
-
-  // метод устарел, используйте метод setTimeoutOfDebounce(uint16_t)
-  void setDebounce(uint16_t debounce) __attribute__((deprecated("Используйте метод setTimeoutOfDebounce(uint16_t); Use the setTimeoutOfDebounce(uint16_t) function")))
-  {
-    setTimeoutOfDebounce(debounce);
-  }
 };
 
 #endif
