@@ -369,6 +369,9 @@ void shButton::resetButtonState()
 {
   setFlag(ONECLICK_BIT, false);
   setFlag(LONGCLICK_BIT, false);
+#if defined(USE_BUTTON_FLAG)
+  btn_flag = 0;
+#endif
   // сброс _btn_state в зависимости от последнего состояния - либо нажата, либо отпущена
   _btn_state = isButtonClosed();
 }
@@ -432,22 +435,21 @@ void shButton::setIntervalOfSerial(uint16_t new_interval)
 }
 
 #if defined(USE_BUTTON_FLAG)
-  uint8_t shButton::getButtonFlag(bool _clear)
+uint8_t shButton::getButtonFlag(bool _clear)
+{
+  uint8_t result = btn_flag;
+  if (_clear)
   {
-    uint8_t result = btn_flag;
-    if (_clear)
-    {
-      btn_flag = 0;
-    }
-    return (result);
+    btn_flag = 0;
   }
+  return (result);
+}
 
-  void shButton::setButtonFlag(uint8_t _flag)
-  {
-    btn_flag = _flag;
-  }
+void shButton::setButtonFlag(uint8_t _flag)
+{
+  btn_flag = _flag;
+}
 #endif
-
 
 // ==== private ======================================
 
@@ -507,6 +509,5 @@ void shButton::setFlag(uint8_t _bit, bool x)
     (x) ? (_flags) |= (1UL << (_bit)) : (_flags) &= ~(1UL << (_bit));
   }
 }
-
 
 #endif
