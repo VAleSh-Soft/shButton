@@ -72,13 +72,13 @@ private:
    * 7 бит - флаг длинного клика, 0 - не было, 1 - был длинный клик
    */
 
-  uint32_t btn_timer = 0; // таймер отработки подавления дребезга контактов и длинного клика
-  uint32_t dbl_timer = 0; // таймер двойного клика
+  unsigned long btn_timer = 0; // таймер отработки подавления дребезга контактов и длинного клика
+  unsigned long dbl_timer = 0; // таймер двойного клика
 
   // получение мгновенного состояния кнопки - нажата/не нажата с учетом типа подключения и без учета дребезга контактов
   bool getContactsState();
   // установка кнопке состояния "только что нажата" или "только что отпущена"
-  void setBtnUpDown(bool flag, uint32_t thisMls);
+  void setBtnUpDown(bool flag, unsigned long thisMls);
   // получение состояния бита
   bool getFlag(uint8_t _bit);
   // установка состояния бита
@@ -238,7 +238,7 @@ shButton::shButton()
 
 uint8_t shButton::getButtonState(bool isClosed)
 {
-  uint32_t thisMls = millis();
+  unsigned long thisMls = millis();
 
   // если поднят флаг подавления дребезга и интервал еще не вышел, больше ничего не делать
   if (_debounce_timeout > 0 &&
@@ -471,7 +471,7 @@ bool shButton::getContactsState()
   return (val);
 }
 
-void shButton::setBtnUpDown(bool flag, uint32_t thisMls)
+void shButton::setBtnUpDown(bool flag, unsigned long thisMls)
 {
   setFlag(DEBOUNCE_BIT, false);
   setFlag(FLAG_BIT, flag);
