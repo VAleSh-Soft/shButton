@@ -31,9 +31,7 @@ void setup()
 {
   // режим пина кнопок устанавливается автоматически
 
-  // включение режима виртуального клика, т.к. будем отлавливать 
-  // одновременное нажатие двух кнопок по событию BTN_ONECLICK
-  but_1.setVirtualClickOn();
+  but_1.setVirtualClickOn(); // включение режима виртуального клика
   but_2.setVirtualClickOn();
 
   Serial.begin(9600);
@@ -43,8 +41,7 @@ void loop()
 {
   but_1.getButtonState();
   but_2.getButtonState();
-  if (but_1.isSecondButtonPressed(but_2, BTN_ONECLICK) ||
-      but_2.isSecondButtonPressed(but_1, BTN_ONECLICK))
+  if (but_1.isSecondButtonPressed(but_2) || but_2.isSecondButtonPressed(but_1))
   { // действие по одновременно нажатым двум кнопкам
     Serial.println("Two buttons pressed");
   }
