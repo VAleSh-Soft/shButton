@@ -1,3 +1,2 @@
-*.zip
 .vscode/*
-docs/*
+_other/*

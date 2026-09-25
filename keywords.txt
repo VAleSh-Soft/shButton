@@ -25,6 +25,8 @@ setButtonType	KEYWORD2
 setVirtualClickOn	KEYWORD2
 setLongClickMode	KEYWORD2
 setIntervalOfSerial	KEYWORD2
+getButtonFlag	KEYWORD2
+setButtonFlag	KEYWORD2
 
 #######################################
 # Constants (LITERAL1)
